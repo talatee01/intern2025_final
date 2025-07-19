@@ -12,7 +12,7 @@
 ข้อมูลดิบที่ได้จาก dataset ต่างๆ จะเก็บอยู่ในโฟลเดอร์  `data` โดยจะมีอยู่หลักๆ 3 ส่วนได้แก่
 
 - **กรมพัฒนาพลังงานทดแทนและอนุรักษ์พลังงาน (DeDe)** :
-  - ตัวแปรที่ใช้ : ค่ารังสีและ
+  - ตัวแปรที่ใช้ : ค่ารังสี
   - รูปแบบ: csv
   - ข้อมูลจากปี 2023
   - มี timestamp แบบ UTC+7
@@ -124,12 +124,63 @@
 ![plot](./figure/c_1.png)
 ### 3️. Matrix Score
 
+- กรองข้อมูลที่ไม่จำเป็น เเละที่ค่า I > 10 (W/m<sup>2</sup>)
 - เปรียบเทียบค่าทางสถิติของ CAMS เเละ ERA5 โดยใช้ DeDe เป็นค่าจริง
 - ค่าทางสถิติมี MAE,RMSE,MBE,nMAE,nRMSE,nMBE,correlation
-
+- Mean Absolute Error (MAE) : ค่าความคลาดเคลื่อนเฉลี่ย วัดค่าความผิดพลาดโดยไม่สนใจทิศทาง ยิ่งค่า MAE ต่ำ แสดงว่าโมเดลแม่นยำ
+- Normalized Mean Absolute Error (nMAE) : MAE ที่แปลงเป็นร้อยละเพื่อให้สะดวกต่อการอ่านข้อมูล 
+- Root Mean Square Error (RMSE) : ค่ารากที่สองของความคลาดเคลื่อนเฉลี่ยกำลังสอง วัดความผิดพลาดแบบให้น้ำหนักกับค่าคลาดเคลื่อนมากๆ เหมาะสำหรับดูว่ามีจุด outlier เยอะไหม
+- Normalized Root Mean Square Error (nRMSE) : RMSE ที่แปลงเป็นร้อยละเพื่อให้สะดวกต่อการอ่านข้อมูล 
+- Mean Bias Error (MBE) : ค่าความเอนเอียงของโมเดล ค่าบวก โมเดล ประเมินค่าสูงเกินจริง ค่าลบ  โมเดล ประเมินค่าต่ำเกินไป
+- Normalized Mean Bias Error (nMBE) : ค่าความเอนเอียงในรูปแบบร้อยละเพื่อให้สะดวกต่อการอ่านข้อมูล 
+- Correlation ดูความสอดคล้องของสองตัวเเปร มีค่าตั้งเเต่ -1 ถึง 1
 
 ## Conclusion
+- ได้ข้อมูลที่ Clean ของกลุ่มตัวเเปร Cloud Radiation เเละ Forecast
+- กราฟ Time Series Radiation, Time Series Forecast Radiation, Matric Score, Scatter Plot Cloud 
 
+## Forecast today
+- ดึงข้อมูลการพยากรณ์รังสีแสงอาทิตย์ (SSRD) จาก CAMS นำมาประมวลผล เเล้วแสดงผลในรูปแบบกราฟ Time Series โดยมีการปรับเวลาตามเวลาไทย (UTC+7) 
+
+# Structure
+## Code 
+เก็บ Code ทั้งหมดของ Project มีดังนี้
+ - CAMS_download.ipynb
+ - CAMS_proceed_data.ipynb
+ - ERA5_proceed_data.ipynb
+ - cloud_visualize.ipynb
+ - forecast_proceed_data.ipynb
+ - forecast_today.ipynb
+ - matrix_score.ipynb
+ - merge_data.ipynb
+ - solar_rad_visualize.ipynb
+## Data
+เก็บข้อมูลดิบของ Project นี้เเบ่งเป็น 3 เเหล่งโดยเเต่ละเเหล่งจะมีข้อมูลเเบบ time stamp 15 min เเละ 1 hr
+
+ - CAMS (มี 2 ประเภทคือ Reanalysis เเละ Forecast)
+    - cams_forecast
+      - all_site_15min
+      - all_site_1hr
+    - cams_time_series_15min
+    - cams_time_series_1hr
+ - DeDe_49stations
+   - merge_15min_all49sites
+   - DeDe_49sites_metadata.csv
+ - ERA5 (มี 2 ประเภทคือ cloud เเละ radiation)
+   - cloud
+     - all_site_15min
+   - radiation
+     - all_site_15min
+     - all_site_1hr
+## Figure
+ใส่ภาพกราฟต่างๆ ที่ประมวลผลมาเเล้ว
+## merged_data
+เก็บไฟล์ CSV ต่างๆ ที่ merge เเล้วนำมาเเยกประเภทดังนี้
+- cams_forecast_15min
+- cams_forecast_1hr
+- era5_cloud_15min
+- solar_radiation_15min
+- solar_radiation_1hr
 ## Notebooks
 
 1. **`cams_download.ipynb`**
